@@ -1,0 +1,32 @@
+{% extends "base_generic2.html" %}
+
+{% block content %}
+  <h1>Item belongs to PO # {{ purchaseorder.id }}</h1>
+  
+
+  {% for copy in purchaseorder.materialitemregister_set.all %}
+  <hr>
+  <p><strong>ID:</strong> {{ copy.id }}</p>
+  
+  
+  
+  {% endfor %}
+
+
+
+
+  <div style="margin-left:20px;margin-top:20px">
+  
+{% endblock %}
+
+<!--
+id = models.UUIDField(primary_key=True, default=uuid.uuid4, help_text='Unique ID for purchase')
+    PurchaseOrder = models.ForeignKey('PurchaseOrder', on_delete=models.RESTRICT, null=True)
+    item_description = models.TextField(max_length=1000, help_text='Enter the description of the item', null=True)
+    generalitem = models.ForeignKey('generalitem', on_delete=models.RESTRICT, null=True)
+    unit=models.CharField(max_length=20)
+    price=models.DecimalField(max_digits=19, decimal_places=10)
+    currency = models.CharField(max_length=1, choices=TYPECURRENCY, default ='U')
+    supplier_code=models.CharField(max_length=40, blank=True, help_text='Enter Supplier Code if you can')
+    notes
+    -->

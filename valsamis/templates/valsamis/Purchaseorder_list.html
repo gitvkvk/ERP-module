@@ -1,0 +1,22 @@
+{% extends "base_generic2.html" %}
+
+{% block content %}
+    
+    <h1>Purchase Order List</h1>
+    {% if purchaseorder_list %}
+    <ul>
+    {% for purchaseorder in purchaseorder_list %}
+        <li>
+        <a href="{{ purchaseorder.get_absolute_url }}">{{ purchaseorder.id }}</a> 
+        </li>
+    {% endfor %}
+    </ul>
+    {% else %}
+    <p>There are no purchase orders.</p>
+    {% endif %}
+    
+    
+    
+ 
+{% endblock %}
+
