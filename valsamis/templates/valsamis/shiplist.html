@@ -1,0 +1,40 @@
+{% extends "base_generic2.html" %}
+
+{% block content %}
+
+<a href = "{% url 'shipformURL'  %}" class ="">
+
+
+<button type="button">add ship</button>
+
+</a>
+
+<br>
+<br>
+
+<td>Ship List as Follows:</td>
+
+
+<br>
+
+    {% for ship in ship_list %}
+        <tr>
+            <td>{{ship.name}}</td>
+            <td>{{ship.company}}</td>
+            <td>{{ship.typeship}}</td>
+
+            <a href = "{% url 'shipupdateURL' ship.id %}" class ="">
+               <button type="button">ship update</button>
+            </a>
+
+            <form action = "{% url 'shipdeleteURL' ship.id %}" method ="post">
+                {% csrf_token %}
+
+                <button type = "submit" class =""></button>
+
+            </form>
+
+        </tr>
+        <br>
+    {% endfor %}
+{% endblock %}

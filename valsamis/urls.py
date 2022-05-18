@@ -9,20 +9,28 @@ from .views import *
 
 
 urlpatterns = [
-       path('', views.index, name='index'),
+       path('', views.index, name='index'), #home
        path('databases', views.databases, name='databases'),
        path('forms', views.formspage, name='forms'),
-       path('companyform', views.companyformview, name = 'companyform'),
+
+
        
        path('databases/branchview', views.branchview, name='branchview'),
        path('databases/projectview', views.projectview, name='projectview'),
        path('databases/customerview', views.customerview, name='customerview'),
-       path('databases/purchaseorders', views.POListView.as_view(), name='POListView'),
-       path('databases/purchaseorders/<int:pk>', views.PODetailView.as_view(), name='purchase-order-detail'),
 
-       path('PurchaseOrderAddURL', views.PurchaseOrderAddView, name='PurchaseOrderAdd'),
 
-       
+       path('databases/purchaseorders', views.POListView.as_view(), name='POListView'), #list view
+       path('databases/purchaseorders/<int:pk>', views.PODetailView.as_view(), name='purchase-order-detail'), #detail view
+
+
+
+       path('shiplist', views.shiplist, name='shiplist'),
+       path('shipform', views.shipformview, name='shipformURL'),  # get and post request for insert operation
+       path('shipform/<int:id>/', views.shipformview, name='shipupdateURL'), # get and post request for update operation
+       path('shipdelete/<int:id>/', views.shipdelete, name='shipdeleteURL'), #get request to retrieve and display all records
+
+  
 
        
        
