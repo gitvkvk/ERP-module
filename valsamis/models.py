@@ -2,9 +2,11 @@ from queue import Empty
 from django.db import models
 from django.urls import reverse
 import uuid
+import django.utils.timezone
 
 class generalitem(models.Model):
     name = models.CharField(max_length=200, help_text='Enter the general item name')
+    date_created = models.DateTimeField(auto_now = True)
     def __str__(self):
         return self.name
 
@@ -12,8 +14,9 @@ class ship(models.Model):
     name = models.CharField(max_length=200, help_text='Enter the ship name')
     company = models.ForeignKey('company', on_delete=models.SET_NULL, null=True)
     """ needs usercreated from user model"""
-    """ needs date created """
-    """ needs date created """
+    date_created = models.DateTimeField(auto_now = True)
+    views = models.IntegerField(default = 0)
+    reviewed = models.BooleanField(default = 0)
     SHIP_LIST = (
         ('c', 'Cruise ship'),
         ('t', 'Tanker'),
@@ -35,6 +38,7 @@ class ship(models.Model):
 
 class company(models.Model):
     name = models.CharField(max_length=200, help_text='Enter the company name')
+    date_created = models.DateTimeField(auto_now = True)
     """Need user created"""
     """Need date created"""
     def __str__(self):
@@ -42,6 +46,7 @@ class company(models.Model):
     
 class customer(models.Model):
     name = models.CharField(max_length=200, help_text='Enter the customer name')
+    date_created = models.DateTimeField(auto_now = True)
     """Need user created"""
     """Need date created"""
     """Need contact name"""
@@ -51,6 +56,7 @@ class customer(models.Model):
     
 class supplier(models.Model):
     name = models.CharField(max_length=200, help_text='Enter the supplier name')
+    date_created = models.DateTimeField(auto_now = True)
     """Need user created"""
     """Need date created"""
     """Need contact name="""
@@ -65,8 +71,9 @@ class supplier(models.Model):
 
     
 class project(models.Model):
-    name = models.CharField(max_length=200, help_text='Enter the project name')
-    ship = models.ForeignKey('ship', on_delete=models.RESTRICT, null=True)
+    name = models.TextField(max_length=200, help_text='Enter the project name')
+    date_created = models.DateTimeField(auto_now = True)
+    ship = models.ForeignKey('ship', on_delete=models.CASCADE, null=True) #PREVIOUSLY was models.RESTRICT
     company = models.ForeignKey('company', on_delete=models.SET_NULL, null=True)
     notes = models.TextField(max_length=1000, help_text='any notes for the project', blank=True, null=True)
     """need to have searchable project code"""
@@ -79,7 +86,7 @@ class project(models.Model):
     def __str__(self):
         return self.name
 
-""" model for the FORMS"""
+
 class PurchaseOrder(models.Model):
     TYPEPO = (
         ('M', 'Material'),
@@ -87,10 +94,19 @@ class PurchaseOrder(models.Model):
         ('T', 'Travel'),
         ('O', 'Other'),
     )
-    project = models.ForeignKey('project', on_delete=models.RESTRICT)
-    supplier = models.ForeignKey('supplier', on_delete=models.RESTRICT)
+    project = models.ForeignKey('project', on_delete=models.CASCADE) #PREVIOUSLY was models.RESTRICT
+    customer = models.ForeignKey('customer', default= '',  on_delete=models.CASCADE)#added default ='' to fix issue back filling entries 
+    #can also delete migrations, flush sqlight command, create new superuser
+    supplier = models.ForeignKey('supplier', on_delete=models.CASCADE) #PREVIOUSLY was models.RESTRICT
+    date_created = models.DateTimeField(auto_now = True)
     """POtype = models.CharField(max_length=1, choices=TYPEPO, default='M')"""
-    notes =models.TextField(max_length=1000, help_text='any notes for PO?', blank=True, null=True)
+    notes = models.TextField(max_length=1000, help_text='any notes for PO?', blank=True, null=True)
+    #many to many field with general item? a general item can have many PO and PO can have many general item? No
+    #each material item has one PO, can have a gen item tag (tag links to mat item links to PO) PO__materialitemregister__generalitem__name
+    #this is drill down structure, but what if you want to see what POs a general item has been assigned to?
+    #do you drill down every PO searching for item 
+    #or
+    #do you use many to many to see what POs item has?
     def __str__(self):
         return f'{self.id} ({self.project})'
 
@@ -105,14 +121,16 @@ class MaterialItemRegister(models.Model):
         ('P', 'Pesos'),
     )
     """id = models.UUIDField(primary_key=True, default=uuid.uuid4, help_text='Unique ID for purchase')"""
-    PurchaseOrder = models.ForeignKey('PurchaseOrder', on_delete=models.RESTRICT, null=True)
+    PurchaseOrder = models.ForeignKey('PurchaseOrder', on_delete=models.CASCADE, null=True)
+    date_created = models.DateTimeField(auto_now = True)
     item_description = models.TextField(max_length=1000, help_text='Enter the description of the item', null=True)
-    generalitem = models.ForeignKey('generalitem', on_delete=models.RESTRICT, null=True)
-    unit=models.CharField(max_length=20)
-    price=models.DecimalField(max_digits=19, decimal_places=10)
+    generalitem = models.ForeignKey('generalitem', on_delete=models.CASCADE, null=True)
+    unit= models.CharField(max_length=20)
+    price= models.DecimalField(max_digits=19, decimal_places=10)
     currency = models.CharField(max_length=1, choices=TYPECURRENCY, default ='U')
-    supplier_code=models.CharField(max_length=40, blank=True, help_text='Enter Supplier Code if you can')
+    supplier_code= models.CharField(max_length=40, blank=True, help_text='Enter Supplier Code if you can')
     notes = models.TextField(max_length=1000,help_text ='Enter any notes for this item')
+    #make notes optional
     def __str__(self):
         return f'{self.id} ({self.item_description})'
 

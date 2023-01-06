@@ -1,22 +1,85 @@
 {% extends "base_generic2.html" %}
 
 {% block content %}
-    
+
+
+
+{% comment %}
+<a href = "{% url 'POformURL'  %}" class ="">
+    <button type="button">add PO</button> 
+</a>
+<br>
     <h1>Purchase Order List</h1>
     {% if purchaseorder_list %}
     <ul>
     {% for purchaseorder in purchaseorder_list %}
         <li>
         <a href="{{ purchaseorder.get_absolute_url }}">{{ purchaseorder.id }}</a> 
+
+        <td>{{PurchaseOrder.project}}</td>
+
+        <a href = "{% url 'POupdateURL' purchaseorder.id %}" class =""> <button type="button">update</button> </a>
+
+        <form action = "{% url 'POdeleteURL' purchaseorder.id %}" method ="post">
+            {% csrf_token %}
+            <button type = "submit" class ="">delete</button>
+        </form>
+
         </li>
     {% endfor %}
     </ul>
     {% else %}
     <p>There are no purchase orders.</p>
     {% endif %}
-    
-    
-    
- 
+{% endblock %}
+{% endcomment %}
+
+
+
+    <a href = "{% url 'POformURL'  %}" class ="">
+        <button type="button">Add New Purchase Order</button>  
+        </a>
+    <br>
+    <br>
+
+    <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Project</th>
+            <th>Supplier</th>
+            <th>Notes (make this optional model field)</th>
+            <th>Update</th>
+            <th>Delete</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for purchaseorder in purchaseorder_list %}
+            <tr>
+              <td><a href="{{ purchaseorder.get_absolute_url }}">PO/{{ purchaseorder.id }}</a> </td>
+              <td>{{ purchaseorder.project }}</td>
+              <td>{{ purchaseorder.supplier }}</td>
+              <td>{{ purchaseorder.notes }}</td>
+
+              <td><a href = "{% url 'POupdateURL' purchaseorder.id %}" class ="">
+                <button type="button">update</button> </a></td>
+              <td>
+                    <form action = "{% url 'POdeleteURL' purchaseorder.id %}" method ="post">
+                        {% csrf_token %}
+                        <button type = "submit" class ="">delete</button>
+                    </form></td>
+
+              {% endfor %}
+            </tr>
+        </tbody>
+      </table>
+
 {% endblock %}
 
+
+
+
+
+
+
+           
