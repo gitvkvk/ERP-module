@@ -3,10 +3,8 @@
 {% block content %}
 
 
-
   <h1>Items belonging to PO # {{ purchaseorder.id }}</h1>
   
-
   {% for copy in purchaseorder.materialitemregister_set.all %}
   <hr>
   <p><strong>ID:</strong> {{ copy.id }}</p>
@@ -18,23 +16,21 @@
   <p><strong>Supplier code:</strong> {{ copy.supplier_code }}</p>
   <p><strong>notes:</strong> {{ copy.notes }}</p>
 
-  
-  
   {% endfor %}
-
-
-
-
 
   <div style="margin-left:20px;margin-top:20px">
 
-  
     <br>
   <p><strong>Total Amount:</strong> </p>
   <p> <a href = "{% url 'POpdfURL' %}" class ="">Print PDF of PO </p>
   
 
-    
+  
+
+
+
+
+
 
 
 {% endblock %}

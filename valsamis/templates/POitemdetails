@@ -1,0 +1,86 @@
+{% extends "base_generic2.html" %}
+
+{% block content %}
+
+{% comment %}
+  <h1>Items belonging to PO # {{ queryset.id }}</h1>
+  
+  {% for copy in purchaseorder.materialitemregister_set.all %}
+  <hr>
+  <p><strong>ID:</strong> {{ copy.id }}</p>
+  <p><strong>Purchase Order:</strong> {{ copy.PurchaseOrder }}</p>
+  <p><strong>Item Description:</strong> {{ copy.item_description }}</p>
+  <p><strong>General Item:</strong> {{ copy.generalitem }}</p>
+  <p><strong>Price:</strong> {{ copy.price }}</p>
+  <p><strong>Currency:</strong> {{ copy.currency }}</p>
+  <p><strong>Supplier code:</strong> {{ copy.supplier_code }}</p>
+  <p><strong>notes:</strong> {{ copy.notes }}</p>
+  {% endfor %}
+ 
+  <div style="margin-left:20px;margin-top:20px">
+
+<br>
+  <p><strong>Total Amount:</strong> </p>
+  <p> <a href = "{% url 'POpdfURL' %}" class ="">Print PDF of PO </p>
+
+
+
+
+    <a href = "{% url 'POformURL'  %}" class ="">
+        <button type="button">Add New Item</button>  
+        </a>
+
+{% endcomment %}
+
+{% comment %}
+if no item in PO, text to say PO is empty
+{% endcomment %}
+    <br>
+    <br>
+    <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>PO</th>
+            <th>date created</th>
+            <th>item description</th>
+            <th>item category</th>
+            <th>unit</th>
+            <th>price</th>
+            <th>currency</th>
+            <th>supplier code</th>
+            <th>notes for item</th>
+            <th>Update</th>
+            <th>Delete</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in queryset %}
+            <tr>
+
+              <td>{{ item.PurchaseOrder.id }}</td>
+              <td>{{ item.date_created }}</td>
+              <td>{{ item.item_description }}</td>
+              <td>{{ item.date_created}}</td>
+              <td>{{ item.generalitem }}</td>
+              <td>{{ item.price }}</td>
+              <td>{{ item.currency }}</td>
+              <td>{{ item.supplier_code}}</td>
+              <td>{{ item.notes}}</td>
+              <td><a href = "{% url 'POupdateURL' item.id %}" class ="">
+                <button type="button">update</button> </a></td>
+              <td>
+                    <form action = "{% url 'POdeleteURL' item.id %}" method ="post">
+                        {% csrf_token %}
+                        <button type = "submit" class ="">delete</button>
+            
+                    </form></td>
+
+              {% endfor %}
+            </tr>
+        </tbody>
+      </table>
+
+
+
+{% endblock %}
+

@@ -3,6 +3,7 @@ from django.db import models
 from django.urls import reverse
 import uuid
 import django.utils.timezone
+from django.contrib.auth.models import User
 
 class generalitem(models.Model):
     name = models.CharField(max_length=200, help_text='Enter the general item name')
@@ -11,25 +12,40 @@ class generalitem(models.Model):
         return self.name
 
 class ship(models.Model):
-    name = models.CharField(max_length=200, help_text='Enter the ship name')
+    created_user = models.ForeignKey(
+                        User,
+                        default = 1,
+                        null = True, 
+                        on_delete = models.SET_NULL
+                        ) # https://www.geeksforgeeks.org/associate-user-to-its-upload-post-in-django/
+    #add a date edited field                
+    edited_user = models.ForeignKey(
+                        User, 
+                        related_name='edited_user', 
+                        default = 1, 
+                        null = True, 
+                        on_delete = models.SET_NULL)
+    #add a time edited field
+
+    name = models.CharField(max_length=200)
     company = models.ForeignKey('company', on_delete=models.SET_NULL, null=True)
     """ needs usercreated from user model"""
     date_created = models.DateTimeField(auto_now = True)
     views = models.IntegerField(default = 0)
     reviewed = models.BooleanField(default = 0)
     SHIP_LIST = (
-        ('c', 'Cruise ship'),
-        ('t', 'Tanker'),
-        ('p', 'Passenger Ship'),
-        ('o', 'Other'),
+        ('Cruise ship', 'cruise ship'), #stored value vs displayed in drop down value
+        ('Tanker', 'tanker'),
+        ('Passenger Ship', 'passenger Ship'),
+        ('Other', 'other'),
  
     )
     typeship = models.CharField(
-        max_length=1,
+        max_length=100, #previously 1, with c -> cruise ship, t -> tanker, ETC
         choices=SHIP_LIST,
         blank=True,
-        default='c',
-        help_text='What type of ship is it',
+        default='Cruise ship',
+       
     )
     def __str__(self):
         """String for representing the Model object."""
@@ -58,7 +74,6 @@ class supplier(models.Model):
     name = models.CharField(max_length=200, help_text='Enter the supplier name')
     date_created = models.DateTimeField(auto_now = True)
     """Need user created"""
-    """Need date created"""
     """Need contact name="""
     """Need contact number""" 
     """Need address""" 
@@ -74,6 +89,7 @@ class project(models.Model):
     name = models.TextField(max_length=200, help_text='Enter the project name')
     date_created = models.DateTimeField(auto_now = True)
     ship = models.ForeignKey('ship', on_delete=models.CASCADE, null=True) #PREVIOUSLY was models.RESTRICT
+    # could use on_delete = models.SET_NULL
     company = models.ForeignKey('company', on_delete=models.SET_NULL, null=True)
     notes = models.TextField(max_length=1000, help_text='any notes for the project', blank=True, null=True)
     """need to have searchable project code"""
@@ -94,6 +110,7 @@ class PurchaseOrder(models.Model):
         ('T', 'Travel'),
         ('O', 'Other'),
     )
+    pochoices = models.CharField(max_length=1, choices=TYPEPO, blank=True, default='M', help_text="Type of PO")
     project = models.ForeignKey('project', on_delete=models.CASCADE) #PREVIOUSLY was models.RESTRICT
     customer = models.ForeignKey('customer', default= '',  on_delete=models.CASCADE)#added default ='' to fix issue back filling entries 
     #can also delete migrations, flush sqlight command, create new superuser
@@ -111,8 +128,10 @@ class PurchaseOrder(models.Model):
         return f'{self.id} ({self.project})'
 
     def get_absolute_url(self):
-        return reverse('purchase-order-detail', args=[str(self.id)])
-
+        return reverse('purchase-order-detail', args=[str(self.id)]) #passing id arguement to URL with name p-o-d, into the view
+    def getPOcost(self):
+        pass
+        #takes id, adds together item register
 
 class MaterialItemRegister(models.Model):
     TYPECURRENCY = (

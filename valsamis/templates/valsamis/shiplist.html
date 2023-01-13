@@ -12,6 +12,8 @@
         <thead>
           <tr>
             <th>Ship Name</th>
+            <th>Created by</th>
+            <th>Edited by</th> by</th>
             <th>Company</th>
             <th>Type of ship</th>
             <th>Date Created</th>
@@ -23,6 +25,8 @@
           {% for ship in ship_list %}
             <tr>
               <td>{{ ship.name }}</td>
+              <td>{{ ship.created_user }}</td>
+              <td>{{ ship.edited_user }}</td>
               <td>{{ ship.company }}</td>
               <td>{{ ship.typeship }}</td>
               <td>{{ ship.date_created}}</td>

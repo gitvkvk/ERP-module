@@ -13,6 +13,13 @@ from reportlab.pdfgen import canvas
 from reportlab.lib.units import inch
 from reportlab.lib.pagesizes import letter
 
+# antiquated examples
+# class POListView(generic.ListView):
+#     model = PurchaseOrder    
+# class PODetailView(generic.DetailView):
+#     model = PurchaseOrder
+
+
 #BASE PAGES
 #valsamis base pages
 def index(request):
@@ -41,21 +48,31 @@ def shiplist(request):
     return render(request, "valsamis/shiplist.html", context)
 def shipformview(request, id = 0):
     if request.method == "GET":
-        if id==0:                                            #if true, it is insert operation
+        if id==0:                                            #blank form
                 form = shipform()
-        else:                                                #update operation
+        else:                                                #populated form
                 shipvar = ship.objects.get(pk=id)
                 form = shipform(instance=shipvar)       
         return render(request, "valsamis/shipformpage.html", {"form":form})
 
     else: # POST requests
         if id == 0:
-            form = shipform(request.POST)
-        else:
+            form = shipform(request.POST)                   #create ship
+
+        else:                                                  #update ship
             shipvar = ship.objects.get(pk=id)
-            form = shipform(request.POST, instance = shipvar)
+            form = shipform(request.POST, instance = shipvar) #combine instance with form post params
         if form.is_valid():
-            form.save()
+            #form.save() original, added the below to add who created/modified item last
+            obj = form.save(commit = False)
+            if id == 0:
+                obj.created_user = request.user
+                #timestamp
+                obj.save()
+            else:
+                obj.edited_user = request.user
+                #timestamp
+                obj.save()
         return redirect('/valsamis/shiplist')
 def shipdelete(request, id):
     shipvar = ship.objects.get(pk=id)
@@ -63,16 +80,54 @@ def shipdelete(request, id):
     return redirect('/valsamis/shiplist') 
 
 
-#PO
-#List View
-#Detail View
+#PO filter view
+#Material filter view (and detail of PO view)
 #PO form (handles updates also)
 #PO delete
 #PO PDF print
-class POListView(generic.ListView):
-    model = PurchaseOrder
-class PODetailView(generic.DetailView):
-    model = PurchaseOrder
+def POFilterListView(request):
+    qs = PurchaseOrder.objects.all()
+    #can inport another model besides purchase order also
+    #getting the named parameters from the HTML from the GET request, saving into variables
+    contains_project_query = request.GET.get('project_contains')
+    id_exact_query = request.GET.get('id_exact')
+    supplier_customer_query = request.GET.get('supplier_or_customer')
+
+    if contains_project_query != '' and contains_project_query is not None: #if it is not empty string and not None
+        qs = qs.filter(project__name__icontains = contains_project_query) #models case sensitive? for forein key, drill down with __
+        #can filter material item register, supplier_id, id, project_id
+        #icontains is case insensitive, contains is not
+
+    elif id_exact_query != '' and id_exact_query is not None: 
+        qs = qs.filter(id = id_exact_query) 
+    
+    elif supplier_customer_query != '' and supplier_customer_query is not None: 
+        qs = qs.filter( Q(supplier__name__icontains = supplier_customer_query) | Q(customer__name__icontains = supplier_customer_query)
+         ).distinct() 
+         #query can return results from both of or statements, returning same post twice. need distinct
+
+    context = {
+        'queryset': qs
+        #can have another model passed into context dictionary
+    }
+
+    return render(request, "pofilterview.html", context)
+def MaterialItemRegisterView(request, pk = 0):
+    if pk == 0:
+        qs = MaterialItemRegister.objects.all()
+        context = {
+        'queryset': qs
+        }
+        return render(request, "POitemdetails", context)
+
+    else:
+        #get query, add to context, render table
+        qs = MaterialItemRegister.objects.all()
+        qs = qs.filter(PurchaseOrder = pk)
+        context = {
+        'queryset': qs
+        }
+        return render(request, "POitemdetails", context)
 def POformview(request, id = 0):
     if request.method == "GET":
         if id==0:                                            #if true, it is insert operation
@@ -90,11 +145,11 @@ def POformview(request, id = 0):
             form = POform(request.POST, instance = POvar)
         if form.is_valid():
             form.save()
-        return redirect('/valsamis/databases/purchaseorders') #HAD TO change this to match the pre-named LIST VIEW
+        return redirect('/valsamis/POfilterlistview') #HAD TO change this to match the pre-named LIST VIEW
 def POdelete(request, id):
     POvar = PurchaseOrder.objects.get(pk=id)
     POvar.delete()
-    return redirect('/valsamis/databases/purchaseorders') # POdelete.html
+    return redirect('/valsamis/POfilterlistview') # POdelete.html
 def POpdfview (request):
 
     #create bytestream buffer
@@ -146,7 +201,9 @@ def search(request):
 
 
 def BootstrapFilterView(request):
+
     qs = PurchaseOrder.objects.all()
+    #can inport another model besides purchase order also
 
     #getting the named parameters from the HTML from the GET request, saving into variables
     contains_project_query = request.GET.get('project_contains')
@@ -169,5 +226,11 @@ def BootstrapFilterView(request):
 
     context = {
         'queryset': qs
+        #can have another model passed into context dictionary
     }
     return render(request, "bootstrap_form.html", context)
+
+#new views
+
+#takes to....
+#need URL reverse for this

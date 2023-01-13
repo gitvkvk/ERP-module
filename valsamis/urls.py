@@ -29,8 +29,15 @@ urlpatterns = [
 
 #PO 
        #list and detail
-       path('databases/purchaseorders', views.POListView.as_view(), name='POListView'), #list view
-       path('databases/purchaseorders/<int:pk>', views.PODetailView.as_view(), name='purchase-order-detail'), #detail view
+       path('POfilterlistview', views.POFilterListView, name = 'POfilterlistviewURL'),
+              #path('databases/purchaseorders', views.POListView.as_view(), name='POListView'), 
+       path('databases/purchaseorders/<int:pk>', views.MaterialItemRegisterView, name='purchase-order-detail'), #detail view
+                     #changed view from (views.PODetailView.as_view()) into new none generic view
+       path('databases/itemregister/', views.MaterialItemRegisterView, name='itemregisterURL'),
+
+       #can follow ship form above, if pk = 0 take to a different html that has filter
+       #now, if you have purchaseorders/0 it works, but purchaseorder/ does not
+       
 
        #CRUD
        path('POform', views.POformview, name='POformURL'),  # get and post request for insert operation

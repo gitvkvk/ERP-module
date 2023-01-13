@@ -11,3 +11,6 @@ admin.site.register(MaterialItemRegister)
 admin.site.register(generalitem)
 
 
+
+
+

@@ -8,7 +8,14 @@ import datetime
 class shipform(forms.ModelForm):
         class Meta:
                 model = ship
-                fields ='__all__'
+                #fields ='__all__'
+                fields = [
+                        'name',
+                        'company',
+                        'reviewed',
+                        'typeship'
+
+                ]
                 labels = {
                   'typeship' : 'What type of ship?',     
                 }
