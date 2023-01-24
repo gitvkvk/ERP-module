@@ -5,9 +5,13 @@ import uuid
 import django.utils.timezone
 from django.contrib.auth.models import User
 
+
+#PAGINATION https://realpython.com/django-pagination/
+
+
 class generalitem(models.Model):
-    name = models.CharField(max_length=200, help_text='Enter the general item name')
-    date_created = models.DateTimeField(auto_now = True)
+    name = models.CharField(max_length=200, help_text='Enter the general item name') #unique = True
+    date_created = models.DateTimeField(auto_now = True) #vs auto_now_add ? #https://stackoverflow.com/questions/51389042/difference-between-auto-now-and-auto-now-add
     def __str__(self):
         return self.name
 
@@ -29,7 +33,6 @@ class ship(models.Model):
 
     name = models.CharField(max_length=200)
     company = models.ForeignKey('company', on_delete=models.SET_NULL, null=True)
-    """ needs usercreated from user model"""
     date_created = models.DateTimeField(auto_now = True)
     views = models.IntegerField(default = 0)
     reviewed = models.BooleanField(default = 0)
@@ -38,33 +41,34 @@ class ship(models.Model):
         ('Tanker', 'tanker'),
         ('Passenger Ship', 'passenger Ship'),
         ('Other', 'other'),
- 
     )
     typeship = models.CharField(
         max_length=100, #previously 1, with c -> cruise ship, t -> tanker, ETC
         choices=SHIP_LIST,
         blank=True,
         default='Cruise ship',
-       
     )
+
+
+    def is_user_this(edited_user):
+        if edited_user == "cats":
+            pass
+        else:
+            pass
+
     def __str__(self):
-        """String for representing the Model object."""
         return self.name
 
 
 class company(models.Model):
     name = models.CharField(max_length=200, help_text='Enter the company name')
     date_created = models.DateTimeField(auto_now = True)
-    """Need user created"""
-    """Need date created"""
     def __str__(self):
         return self.name
     
 class customer(models.Model):
     name = models.CharField(max_length=200, help_text='Enter the customer name')
     date_created = models.DateTimeField(auto_now = True)
-    """Need user created"""
-    """Need date created"""
     """Need contact name"""
     """Need contact number""" 
     def __str__(self):
@@ -86,6 +90,8 @@ class supplier(models.Model):
 
     
 class project(models.Model):
+    id = models.BigAutoField(primary_key=True)
+    #copyfield = models.IntegerField(id)
     name = models.TextField(max_length=200, help_text='Enter the project name')
     date_created = models.DateTimeField(auto_now = True)
     ship = models.ForeignKey('ship', on_delete=models.CASCADE, null=True) #PREVIOUSLY was models.RESTRICT

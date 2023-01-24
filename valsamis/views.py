@@ -26,8 +26,8 @@ def index(request):
     return render(request, 'index.html')
 def databases(request):
     return render(request, 'databases.html')
-def formspage(request):
-    return render(request, 'forms.html')
+def reportspage(request):
+    return render(request, 'reports.html')
 #delete this later, only as examples
 def branchview(request): 
     num_ship = ship.objects.all().count()

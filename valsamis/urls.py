@@ -13,7 +13,7 @@ urlpatterns = [
        #Base URLs
        path('', views.index, name='index'), #home
        path('databases', views.databases, name='databases'),
-       path('forms', views.formspage, name='forms'),
+       path('reports', views.reportspage, name='reports'),
        #purpose is to show number of ships in database, can delete these later
        path('databases/branchview', views.branchview, name='branchview'),
        path('databases/customerview', views.customerview, name='customerview'),
