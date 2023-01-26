@@ -19,9 +19,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 #SECRET_KEY = 'django-insecure-*yv#z0_k3)=4s*r$8bk1so9^gj6=)rr4y+)&)frfy+t-p(146i'
-# SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 
-#                 'django-insecure-*yv#z0_k3)=4s*r$8bk1so9^gj6=)rr4y+)&)frfy+t-p(146i')
-SECRET_KEY = os.environ['DJANGO_SECRET_KEY']
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 
+                'django-insecure-*yv#z0_k3)=4s*r$8bk1so9^gj6=)rr4y+)&)frfy+t-p(146i')
+
 
 
 #DEBUG = True
@@ -144,4 +144,4 @@ LOGIN_REDIRECT_URL = '/'
 # https://pypi.org/project/whitenoise/
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-CSRF_TRUSTED_ORIGINS = ['https://web-production-3640.up.railway.app']
+CSRF_TRUSTED_ORIGINS = ['https://web-production-b776.up.railway.app/']
