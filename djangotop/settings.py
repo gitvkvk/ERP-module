@@ -144,4 +144,4 @@ LOGIN_REDIRECT_URL = '/'
 # https://pypi.org/project/whitenoise/
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-CSRF_TRUSTED_ORIGINS = ['web-production-b776.up.railway.app']
+CSRF_TRUSTED_ORIGINS = ['https://web-production-b776.up.railway.app']
