@@ -116,7 +116,7 @@ class PurchaseOrder(models.Model):
         ('T', 'Travel'),
         ('O', 'Other'),
     )
-    pochoices = models.CharField(max_length=1, choices=TYPEPO, blank=True, default='M', help_text="Type of PO")
+    pochoices = models.CharField(max_length=1, choices=TYPEPO, blank=True, default='M')
     project = models.ForeignKey('project', on_delete=models.CASCADE) #PREVIOUSLY was models.RESTRICT
     customer = models.ForeignKey('customer', default= '',  on_delete=models.CASCADE)#added default ='' to fix issue back filling entries 
     #can also delete migrations, flush sqlight command, create new superuser

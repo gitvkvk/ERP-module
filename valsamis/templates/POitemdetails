@@ -23,20 +23,28 @@
   <p><strong>Total Amount:</strong> </p>
   <p> <a href = "{% url 'POpdfURL' %}" class ="">Print PDF of PO </p>
 
-
-
-
     <a href = "{% url 'POformURL'  %}" class ="">
         <button type="button">Add New Item</button>  
         </a>
 
 {% endcomment %}
 
+
+
 {% comment %}
 if no item in PO, text to say PO is empty
 {% endcomment %}
+
+<a href = "{% url 'POitemformURL'  %}" class ="">
+  <button type="button">Add Item to PO</button>  
+</a>
+
     <br>
     <br>
+    <p>Add item button here (PK of current PO is already passed into URL. send this to the add item button) </p>
+    <p> if pk = 0/empty, button adds item without having PO already filled out </p>
+    <p> update/delete links below are for PO not for the item </p>
+
     <table class="table table-bordered">
         <thead>
           <tr>
@@ -56,7 +64,6 @@ if no item in PO, text to say PO is empty
         <tbody>
           {% for item in queryset %}
             <tr>
-
               <td>{{ item.PurchaseOrder.id }}</td>
               <td>{{ item.date_created }}</td>
               <td>{{ item.item_description }}</td>
@@ -66,7 +73,7 @@ if no item in PO, text to say PO is empty
               <td>{{ item.currency }}</td>
               <td>{{ item.supplier_code}}</td>
               <td>{{ item.notes}}</td>
-              <td><a href = "{% url 'POupdateURL' item.id %}" class ="">
+              <td><a href = "{% url 'POitemformURL'%}" class ="">
                 <button type="button">update</button> </a></td>
               <td>
                     <form action = "{% url 'POdeleteURL' item.id %}" method ="post">
@@ -79,8 +86,9 @@ if no item in PO, text to say PO is empty
             </tr>
         </tbody>
       </table>
-
-
+      <br>
+  <p><strong>Total Amount:</strong> </p>
+  <p> <a href = "{% url 'POpdfURL' %}" class ="">Print PDF of PO </p>
 
 {% endblock %}
 

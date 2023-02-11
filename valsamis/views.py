@@ -3,7 +3,7 @@ from django.db.models import Q
 from valsamis.models import ship, company, MaterialItemRegister, PurchaseOrder
 from django.http import HttpResponse, HttpResponseRedirect
 from . import forms
-from .forms import shipform, POform
+from .forms import shipform, POform, POitemform
 from django.views import generic
 from django.contrib.auth.models import User
 from .filters import UserFilter
@@ -128,6 +128,8 @@ def MaterialItemRegisterView(request, pk = 0):
         'queryset': qs
         }
         return render(request, "POitemdetails", context)
+
+        #context will contain PK of PO, pass this to MIregister button
 def POformview(request, id = 0):
     if request.method == "GET":
         if id==0:                                            #if true, it is insert operation
@@ -190,6 +192,33 @@ def POpdfview (request):
     buf.seek(0)
 
     return FileResponse(buf,as_attachment=True, filename = 'POPDF.pdf' )
+
+#PO Item CRUD
+
+#Update form does not prefill the form for resubmittal, unlike with ship or PO form
+
+def POitemformview(request, id = 0):
+    if request.method == "GET":
+        if id==0:                                            #if true, it is insert operation
+                form = POitemform()  #MAKE PO FORM
+        else:                                                #update operation
+                POitemvar = MaterialItemRegister.objects.get(pk=id)
+                form = POitemform(instance=POitemvar)       
+        return render(request, "valsamis/POitemformpage.html", {"form":form})  # POitemformpage.html
+
+    else: # POST requests
+        if id == 0:
+            form = POitemform(request.POST)
+        else:
+            POitemvar = MaterialItemRegister.objects.get(pk=id)
+            form = POitemform(request.POST, instance = POitemvar)
+        if form.is_valid():
+            form.save()
+        return redirect('/valsamis/POfilterlistview') #HAD TO change this to match the pre-named LIST VIEW
+def POitemdelete(request, id):
+    POitemvar = MaterialItemRegister.objects.get(pk=id)
+    POitemvar.delete()
+    return redirect('/valsamis/POfilterlistview') # POdelete.html
 
 
 
