@@ -14,7 +14,6 @@ urlpatterns = [
        path('', views.index, name='index'), #home
        path('databases', views.databases, name='databases'),
        path('reports', views.reportspage, name='reports'),
-       #purpose is to show number of ships in database, can delete these later
        path('databases/branchview', views.branchview, name='branchview'),
        path('databases/customerview', views.customerview, name='customerview'),
 
@@ -35,14 +34,24 @@ urlpatterns = [
                      #changed view from (views.PODetailView.as_view()) into new none generic view
        path('databases/itemregister/', views.MaterialItemRegisterView, name='itemregisterURL'),
 
-       #can follow ship form above, if pk = 0 take to a different html that has filter
-       #now, if you have purchaseorders/0 it works, but purchaseorder/ does not
+              #can follow ship form above, if pk = 0 take to a different html that has filter
+              #now, if you have purchaseorders/0 it works, but purchaseorder/ does not
        
 
-       #CRUD
+       #CRUD for PO
        path('POform', views.POformview, name='POformURL'),  # get and post request for insert operation
        path('POform/<int:id>/', views.POformview, name='POupdateURL'), # get and post request for update operation
        path('POdelete/<int:id>/', views.POdelete, name='POdeleteURL'), #get request to retrieve and display all records
+
+
+       #CRUD for PO items
+       path('POitemform', views.POitemformview, name='POitemformURL'),  # get and post request for insert operation
+       path('POitemform/<int:id>/', views.POitemformview, name='POitemupdateURL'), # get and post request for update operation
+       path('POitemdelete/<int:id>/', views.POitemdelete, name='POitemdeleteURL'), #get request to retrieve and display all records
+
+
+
+
 
        #generate PDF
        path('POpdf', views.POpdfview, name='POpdfURL'), 

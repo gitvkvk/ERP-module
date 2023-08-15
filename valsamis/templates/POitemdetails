@@ -23,14 +23,13 @@
   <p><strong>Total Amount:</strong> </p>
   <p> <a href = "{% url 'POpdfURL' %}" class ="">Print PDF of PO </p>
 
-
-
-
     <a href = "{% url 'POformURL'  %}" class ="">
         <button type="button">Add New Item</button>  
         </a>
 
 {% endcomment %}
+
+
 
 {% comment %}
 if no item in PO, text to say PO is empty
@@ -44,6 +43,10 @@ if no item in PO, text to say PO is empty
     <br>Should be able to see all material instances of general item and make a report, material being an instance of general
     <br>
     <br>
+    <p>Add item button here (PK of current PO is already passed into URL. send this to the add item button) </p>
+    <p> if pk = 0/empty, button adds item without having PO already filled out </p>
+    <p> update/delete links below are for PO not for the item </p>
+
     <table class="table table-bordered">
         <thead>
           <tr>
@@ -79,7 +82,7 @@ if no item in PO, text to say PO is empty
               <td>{{ item.currency }}</td>
               <td>{{ item.supplier_code}}</td>
               <td>{{ item.notes}}</td>
-              <td><a href = "{% url 'POupdateURL' item.id %}" class ="">
+              <td><a href = "{% url 'POitemformURL'%}" class ="">
                 <button type="button">update</button> </a></td>
               <td>
                     <form action = "{% url 'POdeleteURL' item.id %}" method ="post">

@@ -1,6 +1,6 @@
 from django import forms
 from django.forms import ModelForm
-from .models import PurchaseOrder, ship, generalitem
+from .models import PurchaseOrder, ship, MaterialItemRegister, generalitem
 from django.core.exceptions import ValidationError
 import datetime
 
@@ -33,6 +33,17 @@ class POform(forms.ModelForm):
                
         def __init__(self, *args, **kwargs):
              super(POform, self).__init__(*args, **kwargs)
+        #      self.fields['project'].empty_label = "SelectDropDown"  
+
+class POitemform(forms.ModelForm):
+
+        class Meta:
+                model = MaterialItemRegister
+                fields ='__all__'
+               
+        def __init__(self, *args, **kwargs):
+             super(POitemform, self).__init__(*args, **kwargs)
+
              self.fields['project'].empty_label = "What project"  
 
 #making a development change
