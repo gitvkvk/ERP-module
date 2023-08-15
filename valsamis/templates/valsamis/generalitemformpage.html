@@ -1,0 +1,21 @@
+{% extends "base_generic2.html" %}
+
+{% block content %}
+
+
+<form action="" method ="post" autocomplete="off">
+    {%csrf_token%}
+    {{form}}
+    <button type="submit">Submit</button>
+</form>
+
+{% comment %}
+
+The form is displaying the help text after the item on a new line, causing confusion
+reformat the form somehow
+
+{% endcomment %}
+
+
+  
+{% endblock %}

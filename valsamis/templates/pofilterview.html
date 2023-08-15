@@ -43,12 +43,15 @@
         </div>
     </nav>
     {% endcomment %}
+
     <main role="main" class="container">
     <br>
     <br>
     <br>
     <br>
       <h3>Purchase Orders</h3>
+
+
 
       <!-- each input on form needs a name attribute (query parameter) -->
        <!-- this parameter is passed into the view function -->
@@ -84,7 +87,7 @@
         <div class="form-row">
             <div class="form-group col-12">
                 <div class="input-group">
-                    <input class="form-control py-2 border-right-0 border" type="search" name="supplier_or_customer" placeholder="supplier or customer..." />
+                    <input class="form-control py-2 border-right-0 border" type="search" name="supplier_or_customer" placeholder="supplier or customer... can add date search, approved or not, etc" />
                     <span class="input-group-append">
                         <div class="input-group-text bg-transparent">
                             <i class="fa fa-search"></i>
@@ -94,8 +97,8 @@
             </div>        
         </div>
         <br>
+        {% comment %}
         <div class="form-row">
-
           <div class="form-group col-md-2 col-lg-2">
             <label for="publishDateMin">Date minimum</label>
             <input type="date" class="form-control" id="publishDateMin" name="date_min">
@@ -130,24 +133,27 @@
             </label>
           </div>
         </div>
+        {% endcomment %}
+
         <button type="submit" class="btn btn-primary">Search</button>
       </form>
 
       <hr />
 
-    <a href = "{% url 'POformURL'  %}" class ="">
+      <a href = "{% url 'POformURL'  %}" class ="">
         <button type="button">Add New PO</button>  
         </a>
-    <br>
+
+
     <br>
     <table class="table table-bordered">
         <thead>
           <tr>
             <th>ID</th>
             <th>Project</th>
-            <th>Company</th>
             <th>Customer</th>
             <th>Supplier</th>
+            <th>Dated Created</th>
             <th>Update</th>
             <th>Delete</th>
           </tr>
@@ -155,7 +161,13 @@
         <tbody>
           {% for PO in queryset %}
             <tr>
+
+            {% comment %}
+            THIS IS EQUIVALENT, USING REVERSE ABSOLUTE
             <td><a href="{{ PO.get_absolute_url }}">PO/{{ PO.id }}</a> </td>
+            {% endcomment %}
+            
+            <td><a href="{% url 'purchase-order-detail' PO.id %}">PO/{{ PO.id }}</a> </td>
               <td>{{ PO.project }}</td>
               <td>{{ PO.customer }}</td>
               <td>{{ PO.supplier }}</td>

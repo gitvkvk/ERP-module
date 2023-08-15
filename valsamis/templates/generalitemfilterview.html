@@ -1,0 +1,166 @@
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+    <meta name="generator" content="Hugo 0.108.0">
+    <title>Valsamees</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    
+    <script src="https://kit.fontawesome.com/a835308a57.js" crossorigin="anonymous"></script>
+
+    <!-- Favicons -->
+<link rel="apple-touch-icon" href="/docs/5.3/assets/img/favicons/apple-touch-icon.png" sizes="180x180">
+<link rel="icon" href="/docs/5.3/assets/img/favicons/favicon-32x32.png" sizes="32x32" type="image/png">
+<link rel="icon" href="/docs/5.3/assets/img/favicons/favicon-16x16.png" sizes="16x16" type="image/png">
+<link rel="manifest" href="/docs/5.3/assets/img/favicons/manifest.json">
+<link rel="mask-icon" href="/docs/5.3/assets/img/favicons/safari-pinned-tab.svg" color="#712cf9">
+<link rel="icon" href="/docs/5.3/assets/img/favicons/favicon.ico">
+<meta name="theme-color" content="#712cf9">
+
+
+
+    <!-- Custom styles for this template -->
+    <link href="starter-template.css" rel="stylesheet">
+  </head>
+
+  <body>
+    <main role="main" class="container">
+    <br>
+    <br>
+    <br>
+    <br>
+      <h3>General Items</h3>
+
+
+
+      <!-- each input on form needs a name attribute (query parameter) -->
+       <!-- this parameter is passed into the view function -->
+      <form method="GET" action=""> <!-- changed from action = "." -->
+        <div class="form-row">
+            <div class="form-group col-12">
+                <div class="input-group">
+                    <br>
+                    <input class="form-control py-2 border-right-0 border" type="search" name="category_contains" placeholder="Search by Category..." />
+                    <span class="input-group-append">
+                        <div class="input-group-text bg-transparent">
+                            <i class="fa fa-search"></i>
+                        </div>
+                    </span>
+
+                </div>
+            </div>        
+        </div>
+        <br>
+        <div class="form-row">
+          <div class="form-group col-12">
+              <div class="input-group">
+                  <br>
+                  <input class="form-control py-2 border-right-0 border" type="search" name="group_contains" placeholder="Search by Group..." />
+                  <span class="input-group-append">
+                      <div class="input-group-text bg-transparent">
+                          <i class="fa fa-search"></i>
+                      </div>
+                  </span>
+
+              </div>
+          </div>        
+      </div>
+      <br>
+      <div class="form-row">
+        <div class="form-group col-12">
+            <div class="input-group">
+                <br>
+                <input class="form-control py-2 border-right-0 border" type="search" name="subgroup_contains" placeholder="Search by Subgroup..." />
+                <span class="input-group-append">
+                    <div class="input-group-text bg-transparent">
+                        <i class="fa fa-search"></i>
+                    </div>
+                </span>
+
+            </div>
+        </div>        
+    </div>
+    <br>
+    <div class="form-row">
+      <div class="form-group col-12">
+          <div class="input-group">
+              <br>
+              <input class="form-control py-2 border-right-0 border" type="search" name="name_contains" placeholder="Search by Name..." />
+              <span class="input-group-append">
+                  <div class="input-group-text bg-transparent">
+                      <i class="fa fa-search"></i>
+                  </div>
+              </span>
+
+          </div>
+      </div>        
+  </div>
+  <br>
+        
+
+        <button type="submit" class="btn btn-primary">Search</button>
+      </form>
+
+      <hr />
+
+      <a href = "{% url 'POformURL'  %}" class ="">
+        <button type="button">Add New General Item</button>  
+        </a>
+
+
+    <br>
+    <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Category</th>
+            <th>Group</th>
+            <th>Subgroup</th>
+            <th>Name</th>
+            <th>Update</th>
+            <th>Delete</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for GeneralItem in queryset %}
+            <tr>
+
+            {% comment %}
+            THIS IS EQUIVALENT, USING REVERSE ABSOLUTE
+            <td><a href="{{ PO.get_absolute_url }}">PO/{{ PO.id }}</a> </td>
+            {% endcomment %}
+            
+              <td><a href="{% url 'generalitem-detail' GeneralItem.id %}">{{ GeneralItem.id }}</a> </td>
+            <td>General Item/{{ GeneralItem.id }}</a> </td>
+              <td>{{ GeneralItem.category }}</td>
+              <td>{{ GeneralItem.group }}</td>
+              <td>{{ GeneralItem.subgroup }}</td>
+              <td>{{ GeneralItem.name}}</td>
+              <td><a href = "{% url 'generalitem-detail' GeneralItem.id %}" class ="">
+                <button type="button">update</button> </a></td>
+              <td>
+                    <form action = "{% url 'generalitemdeleteURL' GeneralItem.id %}" method ="post">
+                        {% csrf_token %}
+                        <button type = "submit" class ="">delete</button>
+            
+                    </form></td>
+
+              {% endfor %}
+            </tr>
+        </tbody>
+      </table>
+
+    </main>
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+</body>
+
+</html>

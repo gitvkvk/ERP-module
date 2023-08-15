@@ -47,6 +47,19 @@ urlpatterns = [
        #generate PDF
        path('POpdf', views.POpdfview, name='POpdfURL'), 
 
+#General Item
+       #list and detail
+       path('generalitemfilterlistview', views.GeneralItemFilterListView, name = 'generalitemfilterlistviewURL'),
+       #path('generalitem/<int:pk>', views.GeneralItemDetailView, name='generalitem-detail'),
+       #path('databases/itemregister/', views.MaterialItemRegisterView, name='itemregisterURL'),
+
+       #can follow ship form above, if pk = 0 take to a different html that has filter
+       #now, if you have purchaseorders/0 it works, but purchaseorder/ does not
+
+       #CRUD
+       path('generalitemform', views.generalitemformview, name='generalitemformURL'),  # get and post request for insert operation
+       path('generalitemform/<int:id>/', views.generalitemformview, name='generalitemupdateURL'), # get and post request for update operation
+       path('generalitemdelete/<int:id>/', views.generalitemdelete, name='generalitemdeleteURL'), #get request to retrieve and display all records
 
 #filters
 

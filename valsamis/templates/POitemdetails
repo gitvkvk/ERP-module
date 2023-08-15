@@ -37,13 +37,23 @@ if no item in PO, text to say PO is empty
 {% endcomment %}
     <br>
     <br>
+    <br>Add in category, group subgroup (drill down model)
+    <br>Add item to PO button
+    <br>Search general items, then add details to general item and add to PO
+    <br>Not needed here: Search past material register items to add to PO, saves as new item but different price
+    <br>Should be able to see all material instances of general item and make a report, material being an instance of general
+    <br>
+    <br>
     <table class="table table-bordered">
         <thead>
           <tr>
+            
             <th>PO</th>
-            <th>date created</th>
-            <th>item description</th>
-            <th>item category</th>
+            <th>specific item</th>
+            <th>general item</th>
+            <th>category</th>
+            <th>group</th>
+            <th>subgroup</th>
             <th>unit</th>
             <th>price</th>
             <th>currency</th>
@@ -56,12 +66,15 @@ if no item in PO, text to say PO is empty
         <tbody>
           {% for item in queryset %}
             <tr>
-
+            
+              
               <td>{{ item.PurchaseOrder.id }}</td>
-              <td>{{ item.date_created }}</td>
               <td>{{ item.item_description }}</td>
-              <td>{{ item.date_created}}</td>
               <td>{{ item.generalitem }}</td>
+              <td>{{ item.generalitem.category }}</td>
+              <td>{{ item.generalitem.group }}</td>
+              <td>{{ item.generalitem.subgroup}}</td>
+              <td>{{ item.unit }}</td>
               <td>{{ item.price }}</td>
               <td>{{ item.currency }}</td>
               <td>{{ item.supplier_code}}</td>
@@ -80,6 +93,18 @@ if no item in PO, text to say PO is empty
         </tbody>
       </table>
 
+    <h1>Total Price: 
+
+      {% if item.currency == "US Dollars" %}
+      <h1>$ </h1>
+            {% else %}
+      <h1>print....The item.currency variable is in the loop above, not this one </h1>
+            {% endif %}
+
+      {% for key, value in Price.items %}
+      ${{ value|floatformat:2 }}
+      {% endfor %} 
+    
 
 
 {% endblock %}

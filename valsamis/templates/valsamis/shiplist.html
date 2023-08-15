@@ -17,6 +17,7 @@
             <th>Company</th>
             <th>Type of ship</th>
             <th>Date Created</th>
+            <th>Date Edited</th>
             <th>Update</th>
             <th>Delete</th>
           </tr>
@@ -30,6 +31,7 @@
               <td>{{ ship.company }}</td>
               <td>{{ ship.typeship }}</td>
               <td>{{ ship.date_created}}</td>
+              <td>{{ ship.date_edited}}</td>
               <td><a href = "{% url 'shipupdateURL' ship.id %}" class ="">
                 <button type="button">update</button> </a></td>
               <td>
