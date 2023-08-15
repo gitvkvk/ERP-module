@@ -45,9 +45,9 @@ urlpatterns = [
 
 
        #CRUD for PO items
-       path('POitemform', views.POitemformview, name='POitemformURL'),  # get and post request for insert operation
-       path('POitemform/<int:id>/', views.POitemformview, name='POitemupdateURL'), # get and post request for update operation
-       path('POitemdelete/<int:id>/', views.POitemdelete, name='POitemdeleteURL'), #get request to retrieve and display all records
+      # path('POitemform', views.POitemformview, name='POitemformURL'),  # get and post request for insert operation
+       #path('POitemform/<int:id>/', views.POitemformview, name='POitemupdateURL'), # get and post request for update operation
+       #path('POitemdelete/<int:id>/', views.POitemdelete, name='POitemdeleteURL'), #get request to retrieve and display all records
 
 
 
