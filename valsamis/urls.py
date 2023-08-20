@@ -27,12 +27,12 @@ urlpatterns = [
        path('shipdelete/<int:id>/', views.shipdelete, name='shipdeleteURL'), #get request to retrieve and display all records
 
 #PO 
-       #list and detail
-       path('POfilterlistview', views.POFilterListView, name = 'POfilterlistviewURL'),
-              #path('databases/purchaseorders', views.POListView.as_view(), name='POListView'), 
-       path('databases/purchaseorders/<int:pk>', views.MaterialItemRegisterView, name='purchase-order-detail'), #detail view
-                     #changed view from (views.PODetailView.as_view()) into new none generic view
-       path('databases/itemregister/', views.MaterialItemRegisterView, name='itemregisterURL'),
+       
+       path('POfilterlistview', views.POFilterListView, name = 'POfilterlistviewURL'), #filter-list view PO
+       #path('databases/purchaseorders', views.POListView.as_view(), name='POListView'), 
+       path('databases/purchaseorders/<int:pk>', views.MaterialItemRegisterView, name='purchase-order-detail'), #PO items view
+              #changed view from (views.PODetailView.as_view()) into new none generic view
+       path('databases/itemregister/', views.MaterialItemRegisterView, name='itemregisterURL'), #all items view
 
               #can follow ship form above, if pk = 0 take to a different html that has filter
               #now, if you have purchaseorders/0 it works, but purchaseorder/ does not
@@ -45,14 +45,16 @@ urlpatterns = [
 
 
        #CRUD for PO items
-      # path('POitemform', views.POitemformview, name='POitemformURL'),  # get and post request for insert operation
-       #path('POitemform/<int:id>/', views.POitemformview, name='POitemupdateURL'), # get and post request for update operation
-       #path('POitemdelete/<int:id>/', views.POitemdelete, name='POitemdeleteURL'), #get request to retrieve and display all records
+       path('POitemfilterform/<int:pk>', views.POitemfilterformview, name='POitemfilterformURL'), #PO filter checkbox select
+       path('POitemform', views.POitemformview, name='POitemformURL'),  # Create material item
+       path('POitemform/<int:id>/', views.POitemformview, name='POitemupdateURL'), # update material item
+       path('POitemdelete/<int:id>/', views.POitemdelete, name='POitemdeleteURL'), # delete material item
 
 
 
 
-
+       #QR PO item
+       path('qr/<int:pk>', views.qr_code, name = 'qrURL'),
        #generate PDF
        path('POpdf', views.POpdfview, name='POpdfURL'), 
 

@@ -125,12 +125,14 @@ def MaterialItemRegisterView(request, pk = 0): #Material filter view (and detail
         qs = qs.filter(PurchaseOrder = pk)
         #add a sum or extra variable assigned to sum, pass it to the context here....
         kevin = qs.aggregate(Sum('price'))
+        POkey = int(pk)
         
 
         #can do a .count on qs to find average https://docs.djangoproject.com/en/4.2/topics/db/aggregation/
         context = {
         'queryset': qs,
-        'Price' : kevin
+        'Price' : kevin,
+        'POkey' : POkey
         }
         return render(request, "POitemdetails", context)
 def POformview(request, id = 0): #PO form (handles updates also)
@@ -195,7 +197,14 @@ def POpdfview (request): #PO PDF print
     buf.seek(0)
 
     return FileResponse(buf,as_attachment=True, filename = 'POPDF.pdf' )
-
+def qr_code(request,pk):
+    name = "Item QR Code:"
+    obj = MaterialItemRegister.objects.get(pk = pk)
+    context = {
+        'name' : name,
+        'obj' : obj,
+    }
+    return render(request, "itemQR.html", context = context )
 #general items
 def GeneralItemFilterListView(request):
     qs = generalitem.objects.all()
@@ -257,7 +266,60 @@ def generalitemdelete(request, id):
     POvar.delete()
     return redirect('/valsamis/generalitemfilterlistview') # POdelete.html
 
+#PO items (register items)
+def POitemformview(request, id = 0): #PO form (handles updates also)
+    if request.method == "GET":
+        if id==0:                                            #if true, it is insert operation
+                form = POform()  #MAKE PO FORM
+        else:                                                #update operation
+                POvar = PurchaseOrder.objects.get(pk=id)
+                form = POform(instance=POvar)       
+        return render(request, "valsamis/POformpage.html", {"form":form})  # POformpage.html
 
+    else: # POST requests
+        if id == 0:
+            form = POform(request.POST)
+        else:
+            POvar = PurchaseOrder.objects.get(pk=id)
+            form = POform(request.POST, instance = POvar)
+        if form.is_valid():
+            form.save()
+        return redirect('/valsamis/POfilterlistview') #HAD TO change this to match the pre-named LIST VIEW
+def POitemdelete(request, id): #PO delete
+    POvar = PurchaseOrder.objects.get(pk=id)
+    POvar.delete()
+    return redirect('/valsamis/POfilterlistview') # POdelete.html
+
+
+
+
+def POitemfilterformview(request, pk = 0): #Filter Form for adding checkbox items to PO
+    if pk == 0:
+        qs = MaterialItemRegister.objects.all()
+        context = {
+        'queryset': qs
+        }
+        return render(request, "testing2.html", context)
+
+    else:
+        #have PK from PO
+        #set up filter table, all general items plus specific...
+        qsSpecific = MaterialItemRegister.objects.all()
+        qsGeneral = generalitem.objects.all()
+
+
+
+        #qs = qs.filter(PurchaseOrder = pk)
+        #add a sum or extra variable assigned to sum, pass it to the context here....
+        POkey = pk
+        
+        #can do a .count on qs to find average https://docs.djangoproject.com/en/4.2/topics/db/aggregation/
+        context = {
+        'querysetSpecific': qsSpecific,
+        'querysetGeneral': qsGeneral,
+        'POkey' : POkey,
+        }
+        return render(request, "testing.html", context)
 
 #django-filter tutorial
 def search(request):

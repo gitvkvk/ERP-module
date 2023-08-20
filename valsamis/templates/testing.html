@@ -1,0 +1,90 @@
+{% extends "base_generic2.html" %}
+
+{% block content %}
+
+<br>
+<br>{{POkey}}
+<br>
+<br>
+
+<table class="table table-bordered">
+  <thead>
+    <tr>
+      <th>Add</th>
+      <th>ID</th>
+      <th>Specific Item Name</th>
+      <th>General Item Name</th>
+      <th>category</th>
+      <th>group</th>
+      <th>subgroup</th>
+      <th>unit</th>
+      <th>price</th>
+      <th>currency</th>
+      <th>Supplier Code</th>
+      <th>Notes</th>
+      <th>Date created</th>
+      <th>Update</th>
+      <th>Delete</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    {% for item in querysetGeneral %}
+      <tr>
+        <td><input type="checkbox" value={{item.id}} class = ""> </td>
+        <td>{{item.id}}</td>
+        <td>-</td>
+        <td>{{ item.name }}</td>
+        <td>{{ item.category }}</td>
+        <td>{{ item.group }}</td>
+        <td>{{ item.subgroup }}</td>
+        <td>-</td>
+        <td>-</td>
+        <td>-</td>
+        <td>-</td>
+        <td>-</td>
+        <td>{{ item.date_created}}</td>
+        <td><a href = "{% url 'POitemformURL'%}" class ="">
+          <button type="button">update</button> </a></td>
+        <td>
+              <form action = "{% url 'POdeleteURL' item.id %}" method ="post">
+                  {% csrf_token %}
+                  <button type = "submit" class ="">delete</button>
+      
+              </form></td>
+      {% endfor %}
+      </tr>
+      {% for item in querysetSpecific %}
+      <tr>
+        <td><input type="checkbox" value={{item.id}} class = ""></td>
+        <td>{{item.id}}</td>
+        <td>{{ item.item_description }}</td>
+        <td>{{ item.generalitem }}</td>
+        <td>{{ item.generalitem.category }}</td>
+        <td>{{ item.generalitem.group }}</td>
+        <td>{{ item.generalitem.subgroup}}</td>
+        <td>{{ item.unit }}</td>
+        <td>{{ item.price }}</td>
+        <td>{{ item.currency }}</td>
+        <td>{{ item.supplier_code}}</td>
+        <td>{{ item.notes}}</td>
+        <td>{{ item.date_created}}</td>
+        <td><a href = "{% url 'POitemformURL'%}" class ="">
+          <button type="button">update</button> </a></td>
+        <td>
+              <form action = "{% url 'POdeleteURL' item.id %}" method ="post">
+                  {% csrf_token %}
+                  <button type = "submit" class ="">delete</button>
+      
+              </form></td>
+
+        {% endfor %}
+      </tr>
+  </tbody>
+</table>
+
+
+
+
+{% endblock %}
+

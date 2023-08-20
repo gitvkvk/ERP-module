@@ -47,11 +47,40 @@ if no item in PO, text to say PO is empty
     <p> if pk = 0/empty, button adds item without having PO already filled out </p>
     <p> update/delete links below are for PO not for the item </p>
 
+<br>
+<br>
+{% for item in queryset %}
+{% comment %}
+
+TRIED PASSING {{POkey}} from view, but <int:int> would not match...
+Tried looping variable from queryset to URL, would not work...
+Now, using reverse URL thing inside of general items model to get a working url
+
+{% endcomment %}
+      <a href = "{{ item.get_absolute_url }}" class ="">
+        <button type="button">Add Item to PO</button>  
+        </a>
+
+
+{% endfor %}
+
+
+<a href = "{{ queryset.get_absolute_url }}" class ="">
+  <button type="button">Second Button</button>  
+  </a>
+  <a href = "{% url 'POitemfilterformURL' POkey.id % }" class ="">
+    <button type="button">Third Button</button>  
+    </a>
+
+
+
+
+
     <table class="table table-bordered">
         <thead>
           <tr>
             
-            <th>PO</th>
+            <th>{{POkey}}</th>
             <th>specific item</th>
             <th>general item</th>
             <th>category</th>
@@ -62,6 +91,7 @@ if no item in PO, text to say PO is empty
             <th>currency</th>
             <th>supplier code</th>
             <th>notes for item</th>
+            <th>QR</th>
             <th>Update</th>
             <th>Delete</th>
           </tr>
@@ -82,6 +112,9 @@ if no item in PO, text to say PO is empty
               <td>{{ item.currency }}</td>
               <td>{{ item.supplier_code}}</td>
               <td>{{ item.notes}}</td>
+              <td><a href = "{% url 'qrURL' item.id%}" class ="">
+                <button type="button">QR</button> </a></td>
+              <td>
               <td><a href = "{% url 'POitemformURL'%}" class ="">
                 <button type="button">update</button> </a></td>
               <td>

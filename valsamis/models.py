@@ -8,6 +8,10 @@ from django.contrib.auth.models import User
 from django.db.models import Sum
 
 from django.utils import timezone
+import qrcode #https://www.youtube.com/watch?v=xk8K3MNu81I&t=621s #for making QR code
+from io import BytesIO #for making QR code
+from django.core.files import File #for making QR code
+from PIL import Image, ImageDraw #for making QR code
 
 
 #PAGINATION https://realpython.com/django-pagination/
@@ -317,10 +321,27 @@ class MaterialItemRegister(models.Model):
     currency = models.CharField(max_length=1, choices=TYPECURRENCY, default ='U')
     supplier_code= models.CharField(max_length=40, blank=True, help_text='Enter Supplier Code if you can')
     notes = models.TextField(max_length=1000,help_text ='Enter any notes for this item')
+    qr_code = models.ImageField(upload_to='qr_codes', blank=True) 
     #could make notes a foreign key/detail view for the specific item, having a hyperlink in the PO table view to see note
     #make notes optional
     def __str__(self):
         return f'{self.id} ({self.item_description})'
+    def get_absolute_url(self):
+        return reverse('POitemfilterformURL', args=[str(self.PurchaseOrder.id)]) 
+    def save(self, *args, **kwargs):
+        qrcode_image = qrcode.make(self.id) #qr based on name field
+        canvas = Image.new('RGB',  (290, 290), 'white') #construct new image based on parameters: mode, size, color
+        draw = ImageDraw.Draw(canvas)
+        canvas.paste(qrcode_image) #paste QR image to canvas
+        fname = f'qr_code_{self.id}.png'  #set a file name
+        buffer = BytesIO() #create in memory file object
+        canvas.save(buffer, 'PNG')
+        self.qr_code.save(fname, File(buffer), save = False) #create a file object and pass it to image field
+        #save = False otherwise infinite loop, many images in media files
+        canvas.close()
+        super().save(*args,**kwargs)
+
+    
     
     #could include a PO total price function (split apart by currencies)
     #convert all items to chosen currency and have final price
